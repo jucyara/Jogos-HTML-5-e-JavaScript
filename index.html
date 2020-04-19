@@ -15,6 +15,11 @@
 				margin-top: -300px;
 				margin-left: -300px;
 			}
+
+			body{
+			background-color: #82FBC5;
+		}
+
 		</style>
 	</head>
 
@@ -32,7 +37,7 @@
 
 			//Basicamente é para isso que serve o canvas, a gente consegue através de um script, fazer desenhos a gente redenriza coisas dentro do nosso elemento.
 
-			var teclas = {};
+			var teclas = {}; //nós temos essa variavel teclas e, eu quero atribuir um valor verdadeiro para a tecla que eu digitar. Essa variável teclas está como se fosse falsa, tipo, tudo que está dentro dela é falso, quando digitar uma tecla ele vai ser verdadeiro, como se estivesse acendendo uma lâmpada.
 
 			var bola = {
 				x: canvas.width /2 - 15, //metade da largura - (menos) metade da largura da bolinha.
@@ -42,7 +47,7 @@
 				dirx: -1, //direção de x indo pra esquerda, então começo decrementando o x.
 				diry: 1, //direção de y indo pra baixo, então começa incrementando o y.
 				mod: 0, //modificador de velocidade, a medida que a bolinha for batendo nos bloquinhos, esse modificador vai aumentar e ai, a velicidade vai ser modificada por isso e ai vai terminar aumentando.
-				speed: 50 //velocidade que a bolinha vai andar em pixels por segundo.
+				speed: 1 //velocidade que a bolinha vai andar em pixels por segundo.
 			};
 
 			var esquerda = {
@@ -51,7 +56,7 @@
 				altura: 120,
 				largura: 30,
 				score: 0, //placar que mostra quem esta ganhando
-				speed: 15 // velocidade
+				speed: 10 // velocidade
 			};
 			var direita = {
 				x: 560, //a canvas tem 600 pixels, eu quero deixar uma margem de 10 a direita e que ele vai ter uma largura tambem de 30 pixels, se voce somar 30 com 560, voce vai ter 590 que é exatamente os 590 pixels que vai deixar a margem de 10.
@@ -59,16 +64,99 @@
 				altura: 120,
 				largura: 30,
 				score: 0, //placar que mostra quem esta ganhando
-				speed: 15 // velocidade
+				speed: 10 // velocidade
+			};
+
+			document.addEventListener("keydown", function(e) {
+				teclas[e.keyCode] = true; //vai mostrar o código da tela
+				//alert(e.keyCode); //não sabemos o código da tecla de có, então vamos criar um alerta para saber o valor das teclas.
+				//vamos usar as teclas: W = 87 e S = 83 para mover o bloquinho da esquerda. Seta pra cima = 38 e seta pra baixo = 40 para mover o bloquinho da direita.
+
+			}, false); //aqui está adicionando um eventlistener, toda vez que digitar alguma tecla, toda vez que correr esse evento keydown, vai executar a função function(e) com parâmetro (e), porque o evento keydown tem esse parametro (e) como um dos seus parametros não opcionais na função.
+
+			document.addEventListener("keyup", function(e){
+				delete teclas[e.keyCode];
+			}, false); //funcao que vai deletar da variavel teclas, a tecla de keycode, ele vai tirar da minha variavel teclas, a tecla que eu tinha apertado. keyup é tipo tecla pra cima
+
+			function moveBloco(){
+				if (87 in teclas && esquerda.y > 0) //quero fazer meu bloco da esquerda subir, pra isso eu tenho que decrementar o meu y. Mas quando eu clicar na tecla para o bloquinho subir, ele vai passar do limite da canvas, então colocamos a segunda condicao para que isso não ocorra.
+					esquerda.y -= esquerda.speed;
+
+				else if (83 in teclas && esquerda.y + esquerda.altura < canvas.height) //a canvas vai renderizar sempre de cima pra baixo, da esquerda pra direita, então tem que analizar esquerda.y + esquerda.altura e ele tem que ser menor que canvas.height
+					esquerda.y += esquerda.speed; //e agora, eu quero ir pra baixo. E, para mim poder ir pra baixo, eu icremento o meu esquerda.y
+
+				if(38 in teclas && direita.y > 0)
+					direita.y -= direita.speed; //mesma coisa da esquerda, a diferença é que agora é na direita.
+
+				else if (40 in teclas && direita.y + direita.altura < canvas.height)
+					direita.y += direita.speed; //mesma coisa da esquerda, a diferença é que agora é na direita.
+			};
+
+			function moveBolinha(){
+				if(bola.y + bola.altura >= esquerda.y && bola.y <= esquerda.y + esquerda.altura && bola.x <= esquerda.x + esquerda.largura){
+					bola.dirx = 1;
+					bola.mod += 0.2;
+				}
+
+				else if(bola.y + bola.altura >= direita.y && bola.y <= direita.y + direita.altura && bola.x + bola.largura >= direita.x){
+					bola.dirx = -1;
+					bola.mod += 0.2;
+				}
+
+				if(bola.y <= 0)
+					bola.diry = 1;
+
+				else if(bola.y + bola.altura >= canvas.height)
+					bola.diry = -1;
+
+				bola.x += (bola.speed + bola.mod) * bola.dirx;
+				bola.y += (bola.speed + bola.mod) * bola.diry;
+
+				if(bola.x < esquerda.x + esquerda.largura - 15)
+					newGame("Player 2");
+
+				else if (bola.x + bola.largura > direita.x + 15)
+					newGame("Player 1")
+			};
+
+			function newGame(winner){
+				if(winner == "Player 1"){
+					esquerda.score++;
+				}
+				else{
+					direita.score++;
+				}
+
+				esquerda.y = canvas.height / 2 - esquerda.altura / 2;
+				direita.y = esquerda.y;
+
+				bola.y = canvas.height / 2 - bola.altura / 2;
+				bola.x = canvas.width / 2 - bola.largura / 2;
+				bola.mod = 0;
 			};
 
 			function desenha(){
+				//o que a gente quer fazer é, toda vez que a gente desenhar, a gente quer atualizar o nosso bloco. Pra isso, nós temos que limpar toda a nossa canvas ctx.clearRect(0, 0, canvas.width, canvas.height); aqui a gente o coloca o inicio em x e em y, ou seja, a gente  está no ponto (0,0) da nossa canvas, e a gente vai até o ponto (canvas.width, canvas.height) 600 em x e 600 em y, a gente vai limpar a canvas completamente. E depois que limparmos a nossa canvas, iremos chamar a função moveBloco();
+
+				ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+				moveBloco();
+				moveBolinha();
+
 				ctx.fillStyle = "white";
 				ctx.fillRect(esquerda.x, esquerda.y, esquerda.largura, esquerda.altura);
 				ctx.fillRect(direita.x, direita.y, direita.largura, direita.altura);
 				ctx.fillRect(bola.x, bola.y, bola.largura, bola.altura);
-			}
-			desenha();
+
+				ctx.font = "20px Arial"; //especifica o tamanho e a fonte do texto
+				ctx.fillText("Player 1: " + esquerda.score, 50, 20); //define o jogador 1 como sendo o bloquinho da esquerda. x = 50px, para da uma distancia legal do bloquinho e y = 20, para dá uma distancia legal do topo.
+
+				ctx.fillText("Player 2: " + direita.score, canvas.width - 150, 20); //x fica no final da canvas, então fica canvas.width - 40 pixels. Só que o texto vai ficar em cima do bloquinho da direita, e não é isso que queremos, precisamos de um distância de 10 pixels, para que quando o bloquinho subir, ele não colida com o texto. O texto tem uma largura mais ou menos de 100 pixels, ai o final dele vai tá colado mais ou menos na frente do bloquinho, então fica canvas.width - 150 pixels, só para garantir. E y = 20.
+			};
+
+			setInterval(desenha, 5); //mas a função desenha ela está rodando uma vez só, e ela tem que estar rodando constatemente, ou seja, tem que ser chamada várias vezes. Existem dois modos para resolver isso, vamos utilizar o modo que não é normalmente comum utiliando setInterval(desenha, 20); que passa como parametro a função desenha e o intervalo, ou seja, depois de quantos milisegundos eu quero chamar de novo a função desenha, ele vai rodar eternamente aqui a função desenha utilizando setInterval().
+
+			//o outro modo é utilizando setTimout(desenha, 10) que passa como parametro a função desenha e o intervalo, ou seja, depois de quantos milisegundos eu quero chamar de novo a função desenha. Só que eu faço DENTRO DA FUNÇÃO DESENHA e CHAMO ELA AO MENOS UMA VEZ FORA DA FUNÇÃO DESENHA: desenha();
 		</script>
 	</body>
 
