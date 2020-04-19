@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+
+	<head>
+		<meta charset="utf-8">
+		<title>Pong</title>
+
+		<style type="text/css">
+			canvas{
+				position: absolute; /*para alinhar no centro do navegador*/
+				left: 50%; /*joga 50% para esquerda*/
+				top: 50%; /*50% do topo*/
+				background-color: black; /*adiciona uma cor de fundo*/
+				/*OBS.: somente a parte superior esquerda da canvas está no centro da tela, para arrumar a margem superior esquerda da canvas, é preciso criar uma margin negativa com metade da altura e metade da largura dele.*/
+				margin-top: -300px;
+				margin-left: -300px;
+			}
+		</style>
+	</head>
+
+	<body>
+		<canvas height="600" width="600" id="mycanvas">O seu browser não suporta este elemento</canvas> <!--pra versoes antigas de navegadores, pode ser que não suporte o
+		elemento canvas. Caso não suporte, ele exibirá a mensagem 
+		acima-->
+
+		<script type="text/javascript"> //inicialização do script
+			var canvas = document.getElementById("mycanvas"); //seleciona o elemento canvas
+			var ctx = canvas.getContext("2d"); //variavel contexto da canvas, que diz que, tudo que for desenhado na canvas, será em 2d.
+
+			//ctx.fillStyle = "white"; tudo que for desenhado na canvas, vai ser na cor branca
+			//ctx.fillRect(0, 0, 50, 50); mostra para a canvas que quero desenhar na cordenada x = 0 e y = 0, um quadrado de 50 x 50 pixels branco.
+
+			//Basicamente é para isso que serve o canvas, a gente consegue através de um script, fazer desenhos a gente redenriza coisas dentro do nosso elemento.
+
+			var teclas = {};
+
+			var bola = {
+				x: canvas.width /2 - 15, //metade da largura - (menos) metade da largura da bolinha.
+				y: canvas.height /2 - 15, //metade da altura - (menos) metade da altura da bolinha.
+				altura: 30, //altura da bolinha
+				largura: 30, //largura da bolinha
+				dirx: -1, //direção de x indo pra esquerda, então começo decrementando o x.
+				diry: 1, //direção de y indo pra baixo, então começa incrementando o y.
+				mod: 0, //modificador de velocidade, a medida que a bolinha for batendo nos bloquinhos, esse modificador vai aumentar e ai, a velicidade vai ser modificada por isso e ai vai terminar aumentando.
+				speed: 50 //velocidade que a bolinha vai andar em pixels por segundo.
+			};
+
+			var esquerda = {
+				x: 10, //10px da borda esquerda
+				y: canvas.height / 2 - 60, //o y vai ficar no centro da tela, então vai ser metade da altura - (menos) metade da altura dele
+				altura: 120,
+				largura: 30,
+				score: 0, //placar que mostra quem esta ganhando
+				speed: 15 // velocidade
+			};
+			var direita = {
+				x: 560, //a canvas tem 600 pixels, eu quero deixar uma margem de 10 a direita e que ele vai ter uma largura tambem de 30 pixels, se voce somar 30 com 560, voce vai ter 590 que é exatamente os 590 pixels que vai deixar a margem de 10.
+				y: canvas.height / 2 - 60, //o y vai ficar no centro da tela, então vai ser metade da altura - (menos) metade da altura dele
+				altura: 120,
+				largura: 30,
+				score: 0, //placar que mostra quem esta ganhando
+				speed: 15 // velocidade
+			};
+
+			function desenha(){
+				ctx.fillStyle = "white";
+				ctx.fillRect(esquerda.x, esquerda.y, esquerda.largura, esquerda.altura);
+				ctx.fillRect(direita.x, direita.y, direita.largura, direita.altura);
+				ctx.fillRect(bola.x, bola.y, bola.largura, bola.altura);
+			}
+			desenha();
+		</script>
+	</body>
+
+</html>
