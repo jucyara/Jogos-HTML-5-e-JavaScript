@@ -1,0 +1,73 @@
+html {
+  box-sizing: border-box;
+}
+
+*, *:before, *:after {
+  box-sizing: inherit;
+}
+
+
+body {
+  background-color: black;
+}
+
+body > div {
+  margin: 120px auto;
+  text-align: center;
+}
+
+.shim {
+          font-family: 'Permanent Marker', cursive;
+          position: absolute;
+          visibility: hidden
+      }
+
+      h1 {
+          font-family: 'Permanent Marker', cursive;
+          text-align: center;
+          color: yellow;
+      }
+
+.tile {
+  
+  width: 50px;
+  height: 50px;
+
+  
+  display: inline-block;
+  vertical-align: top;
+}
+
+
+.wall {
+  background-color: blue;
+  border: 2px solid cornflowerblue;
+}
+
+
+.coin {
+  background-color: yellow;
+  border-radius: 50%;
+  transform: scale(0.3);
+}
+
+.fantasma{
+  background-image: url('ghost1.png');
+}
+
+.pacman {
+  
+  background-image: url('pacman.png');
+}
+
+.left {
+  background-image: url('pacman-left.png');
+}
+
+.up {
+  background-image: url('pacman-up.png');
+}
+
+.down {
+  background-image: url('pacman-down.png');
+}
