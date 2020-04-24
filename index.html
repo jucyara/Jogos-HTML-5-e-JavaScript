@@ -19,11 +19,24 @@
 			body{
 			background-color: #82FBC5;
 		}
+			.shim {
+  			font-family: 'Permanent Marker', cursive;
+  			position: absolute;
+  			visibility: hidden
+		}
+
+		h1 {
+  			font-family: 'Permanent Marker', cursive;
+  			color: black;
+		}
 
 		</style>
 	</head>
 
 	<body>
+		<div id='shim'></div>
+		<h1> Jogo Pong </h1>
+		
 		<canvas height="600" width="600" id="mycanvas">O seu browser não suporta este elemento</canvas> <!--pra versoes antigas de navegadores, pode ser que não suporte o
 		elemento canvas. Caso não suporte, ele exibirá a mensagem 
 		acima-->
